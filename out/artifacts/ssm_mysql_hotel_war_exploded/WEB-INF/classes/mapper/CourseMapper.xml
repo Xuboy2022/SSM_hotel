@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mecol.bookshop_ssm.dao.CourseDao">
+<select id="getCourseList" resultType="com.mecol.bookshop_ssm.entity.Course">
+    select * from course order by id
+</select>
+
+    <delete id="delCourseById">
+        delete from course where id=#{id}
+    </delete>
+
+    <select id="getCourseById" resultType="com.mecol.bookshop_ssm.entity.Course">
+        select * from course where id=#{id}
+    </select>
+    <update id="updCourse" parameterType="com.mecol.bookshop_ssm.entity.Course">
+        update course
+        <set>
+            <if test="courseName!=null">
+                courseName=#{courseName},
+            </if>
+            <if test="teacherName!=null">
+                teacherName=#{teacherName},
+            </if>
+            <if test="place!=null">
+                place=#{place},
+            </if>
+            <if test="lessonType!=null">
+                lessonType=#{lessonType},
+            </if>
+            <if test="credit!=null">
+                credit=#{credit},
+            </if>
+
+        </set>
+        where id=#{id}
+
+
+    </update>
+    <insert id="insCourse" parameterType="com.mecol.bookshop_ssm.entity.Course">
+        insert into course(courseName,teacherName,place,lessonType,credit)
+        values (#{courseName},#{teacherName},#{place},#{lessonType},#{credit})
+    </insert>
+</mapper>

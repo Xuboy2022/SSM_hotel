@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mecol.hotel.dao.RoleMenuDao">
+    <select id="selMenusByRoleId" resultType="com.mecol.hotel.entity.RoleMenu">
+        select * from tb_role_menu where roleid=#{roleId}
+    </select>
+    <select id="getRoleMenuByMenuId" resultType="com.mecol.hotel.entity.RoleMenu">
+        select * from tb_role_menu where menuId=#{menuId}
+    </select>
+
+    <delete id="deleteMenusByRoleId">
+        delete from tb_role_menu where roleId=#{roleId}
+    </delete>
+    <insert id="insert" parameterType="com.mecol.hotel.entity.RoleMenu">
+    insert into tb_role_menu (menuId,roleId) values (#{menuId},#{roleId})
+    </insert>
+    <delete id="deleteMenuByMenuId">
+        delete from tb_role_menu where menuId=#{menuId}
+    </delete>
+</mapper>

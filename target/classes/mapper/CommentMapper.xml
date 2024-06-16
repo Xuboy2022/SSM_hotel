@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mecol.hotel.dao.CommentDao">
+    <resultMap id="commentResultMap" type="com.mecol.hotel.entity.Comment">
+        <id property="comment_id" column="comment_id"/>
+            <result property="content" column="content"/>
+            <result property="pub_date" column="pub_date"/>
+            <!--多对一关联的映射-->
+            <association property="user" javaType="com.mecol.hotel.entity.User">
+                <id property="user_id" column="user_id"/>
+                <result property="username" column="username"/>
+                <result property="photo_path" column="photo_path"/>
+            </association>
+    </resultMap>
+
+    <select id="selectCommentByRoom_info_id" parameterType="int" resultMap="commentResultMap">
+        select * from tb_user, tb_comment
+        where tb_comment.user_id=tb_user.user_id
+        and tb_comment.room_info_id=#{room_info_id}
+
+    </select>
+
+
+    <insert id="insComment" parameterType="com.mecol.hotel.entity.Comment">
+        insert into tb_comment(content,pub_date,room_info_id,user_id)
+        values (#{content},#{pub_date},#{room_info_id},#{user_id})
+    </insert>
+
+
+
+    <resultMap id="commentResultMap1" type="com.mecol.hotel.entity.Comment">
+        <id property="comment_id" column="comment_id"/>
+        <result property="content" column="content"/>
+        <result property="pub_date" column="pub_date"/>
+        <association property="roomInfo"
+                     javaType="com.mecol.hotel.entity.RoomInfo">
+            <id property="room_info_id" column="room_info_id"/>
+            <result property="room_num" column="room_num"/>
+            <result property="price" column="price"/>
+        </association>
+        <association property="user"
+                     javaType="com.mecol.hotel.entity.User">
+            <id property="user_id" column="user_id"/>
+            <result property="username" column="username"/>
+        </association>
+    </resultMap>
+
+    <select id="getCommentList" resultMap="commentResultMap1" >
+
+           select * from tb_comment
+           left join  tb_room_info
+           on tb_comment.room_info_id=tb_room_info.room_info_id
+           left join tb_user on tb_comment.user_id=tb_user.user_id
+    </select>
+
+
+    <delete id="deleteComment" parameterType="int">
+        delete from tb_comment where comment_id=#{comment_id}
+    </delete>
+
+
+
+
+
+</mapper>

@@ -1,0 +1,52 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mecol.hotel.dao.MenuDao">
+    <update id="updateMenuByKey" parameterType="com.mecol.hotel.entity.Menu">
+        update tb_menu
+        <set>
+            <if test="sorting!=null">
+                sorting=#{sorting}
+            </if>
+        </set>
+        <where>
+            menuId=#{menuId}
+        </where>
+    </update>
+   <select id="getMenuById" resultType="com.mecol.hotel.entity.Menu">
+
+       select * from tb_menu where menuId=#{menuId}
+
+   </select>
+
+    <select id="getAllMenus" resultType="com.mecol.hotel.entity.Menu">
+        select * from tb_menu order by sorting asc
+    </select>
+    <select id="checkNameSameLevel" resultType="com.mecol.hotel.entity.Menu"
+    parameterType="com.mecol.hotel.entity.Menu">
+        select * from tb_menu
+        <where>
+            parentId=#{parentId} and name=#{name}
+        </where>
+
+    </select>
+    <insert id="insMenu" parameterType="com.mecol.hotel.entity.Menu">
+        insert into
+        tb_menu(name,icon,href,perms,spread,parentId,sorting)
+        values (#{name},#{icon},#{href},#{perms},#{spread},#{parentId},#{sorting})
+    </insert>
+    <update id="updateMenu" parameterType="com.mecol.hotel.entity.Menu">
+        update tb_menu
+        set name=#{name},icon=#{icon},href=#{href},perms=#{perms},spread=#{spread},parentId=#{parentId},
+        sorting=#{sorting}
+        <where>
+            menuId=#{menuId}
+        </where>
+    </update>
+    <select id="getMenuByParentId" resultType="com.mecol.hotel.entity.Menu">
+      select * from tb_menu where parentId=#{menuId}
+    </select>
+    <delete id="delMenuById">
+        delete from tb_menu where menuId=#{menuId}
+    </delete>
+</mapper>

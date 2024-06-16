@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mecol.hotel.dao.RoomInfoDao">
+
+    <delete id="delRoomById" parameterType="int">
+        delete from tb_room_info where room_info_id=#{room_info_id}
+    </delete>
+
+
+    <update id="updRoom" parameterType="com.mecol.hotel.entity.RoomInfo">
+        update tb_room_info
+        <set>
+            <if test="room_num!=null">
+                room_num=#{room_num},
+            </if>
+            <if test="area!=null">
+                area=#{area},
+            </if>
+            <if test="intro!=null">
+                intro=#{intro},
+            </if>
+            <if test="price!=null">
+                price=#{price},
+            </if>
+            <if test="room_catalog_id!=null">
+                room_catalog_id=#{room_catalog_id},
+            </if>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+            <if test="photo_path!=null">
+                photo_path=#{photo_path},
+            </if>
+        </set>
+        where room_info_id=#{room_info_id}
+
+
+
+
+    </update>
+
+
+
+    <select id="getRoomByNum" resultType="com.mecol.hotel.entity.RoomInfo">
+        select * from tb_room_info where room_num=#{roomNum}
+    </select>
+   <!--status为1 表示已预订-->
+    <select id="getRoomByIdWithStatus1" resultType="com.mecol.hotel.entity.RoomInfo">
+        select * from tb_room_info where room_info_id=#{room_info_id} and status=1
+    </select>
+
+    <!--status为1 表示已预订-->
+    <select id="getRoomByIdWithStatus2" resultType="com.mecol.hotel.entity.RoomInfo">
+        select * from tb_room_info where room_info_id=#{room_info_id} and status=2
+    </select>
+    <select id="getRoomById" resultType="com.mecol.hotel.entity.RoomInfo">
+        select * from tb_room_info where room_info_id=#{room_info_id}
+    </select>
+
+
+    <insert id="insRoom" parameterType="com.mecol.hotel.entity.RoomInfo">
+        insert into tb_room_info(room_num,area,intro,price,room_catalog_id,status,
+        version,photo_path)
+        values (#{room_num},#{area},#{intro},#{price},#{room_catalog_id},#{status},#{version},
+        #{photo_path})
+    </insert>
+
+    <resultMap id="roomInfoResultMap" type="com.mecol.hotel.entity.RoomInfo">
+        <id property="room_info_id" column="room_info_id"/>
+            <result property="room_num" column="room_num"/>
+            <result property="area" column="area"/>
+            <result property="intro" column="intro"/>
+            <result property="price" column="price"/>
+            <result property="status" column="status"/>
+            <result property="room_catalog_id" column="room_catalog_id"/>
+            <result property="photo_path" column="photo_path"/>
+            <!--多对一关联映射-->
+            <association property="roomCatalog" javaType="com.mecol.hotel.entity.RoomCatalog">
+                <id property="room_catalog_id" column="room_catalog_id"/>
+                    <result property="catalog" column="catalog"/>
+            </association>
+    </resultMap>
+
+    <select id="getRoomList" resultMap="roomInfoResultMap">
+
+        select * from tb_room_catalog  ,tb_room_info
+        where  tb_room_info.room_catalog_id=tb_room_catalog.room_catalog_id
+        order by tb_room_info.room_num
+    </select>
+
+
+
+
+</mapper>

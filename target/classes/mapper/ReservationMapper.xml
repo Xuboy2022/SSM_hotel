@@ -1,0 +1,197 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mecol.hotel.dao.ReservationDao">
+
+    <insert id="insReservation" parameterType="com.mecol.hotel.entity.Reservation">
+
+        insert into tb_reservation(status,order_time,days,check_in_time,check_in_name,check_in_phone
+        ,user_id,room_info_id)
+        values (#{status},#{order_time},#{days},#{check_in_time},#{check_in_name},#{check_in_phone},
+        #{user_id},#{room_info_id})
+
+    </insert>
+
+
+    <select id="getReservationById" resultType="com.mecol.hotel.entity.Reservation">
+        select * from tb_reservation where reservation_id=#{reservation_id}
+    </select>
+
+    <update id="updateReservation" parameterType="com.mecol.hotel.entity.Reservation">
+        update tb_reservation
+        <set>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+            <if test="order_time!=null">
+                order_time=#{order_time},
+            </if>
+            <if test="days!=null">
+                days=#{days},
+            </if>
+            <if test="check_in_time!=null">
+                check_in_time=#{check_in_time},
+            </if>
+            <if test="check_in_name!=null">
+                check_in_name=#{check_in_name},
+            </if>
+            <if test="check_in_phone!=null">
+                check_in_phone=#{check_in_phone},
+            </if>
+            <if test="user_id!=null">
+                user_id=#{user_id},
+            </if>
+            <if test="room_info_id!=null">
+                room_info_id=#{room_info_id},
+            </if>
+        </set>
+        where reservation_id=#{reservation_id}
+
+    </update>
+
+
+    <!--
+         一对一关联映射  一定要设置fetchType="eager"不使用懒加载
+        否则@Response 返回json时 报错无法序列化 handler等错误
+
+        其次注意这种一对一的查询方法 如：reservationResultMap 中如果roomInfo为空
+        返回的reservation中的roomInfo就为null 返回到layui table中 依然会有这一条数据
+        只不过roomInfo都为null 我们显然不希望有着条数据
+
+
+    <resultMap id="reservationResultMap" type="com.mecol.hotel.entity.Reservation">
+        <id property="reservation_id" column="reservation_id"/>
+        <result property="check_in_time" column="check_in_time"/>
+        <result property="check_in_name" column="check_in_name"/>
+        <result property="check_in_phone" column="check_in_phone"/>
+        <result property="room_info_id" column="room_info_id"/>
+        <association property="roomInfo" column="room_info_id"
+                     select="com.mecol.hotel.dao.RoomInfoDao.getRoomByIdWithStatus1"
+                     javaType="com.mecol.hotel.entity.RoomInfo"
+                        fetchType="eager"
+        />
+    </resultMap>
+    <select id="getReservationList" resultMap="reservationResultMap">
+          select * from tb_reservation where status=0
+    </select>
+
+    <resultMap id="reservationDoneResultMap" type="com.mecol.hotel.entity.Reservation">
+        <id property="reservation_id" column="reservation_id"/>
+        <result property="check_in_time" column="check_in_time"/>
+        <result property="check_in_name" column="check_in_name"/>
+        <result property="check_in_phone" column="check_in_phone"/>
+        <result property="room_info_id" column="room_info_id"/>
+        <association property="roomInfo" column="room_info_id"
+                     select="com.mecol.hotel.dao.RoomInfoDao.getRoomByIdWithStatus2"
+                     javaType="com.mecol.hotel.entity.RoomInfo"
+                     fetchType="eager"
+        />
+    </resultMap>
+
+    <select id="getReservationDoneList" resultMap="reservationDoneResultMap">
+        select * from tb_reservation where status=0
+    </select>
+    -->
+
+    <resultMap id="reservationResultMap" type="com.mecol.hotel.entity.Reservation">
+        <id property="reservation_id" column="reservation_id"/>
+        <result property="check_in_time" column="check_in_time"/>
+        <result property="check_in_name" column="check_in_name"/>
+        <result property="check_in_phone" column="check_in_phone"/>
+        <result property="room_info_id" column="room_info_id"/>
+        <association property="roomInfo"
+                     javaType="com.mecol.hotel.entity.RoomInfo">
+
+            <id property="room_info_id" column="room_info_id"/>
+            <result property="room_num" column="room_num"/>
+            <result property="price" column="price"/>
+            <result property="photo_path" column="photo_path"/>
+        </association>
+    </resultMap>
+    <select id="getReservationList" resultMap="reservationResultMap">
+          select * from tb_reservation left join  tb_room_info
+          on tb_reservation.room_info_id=tb_room_info.room_info_id
+          where tb_reservation.status=0 and tb_room_info.status=1
+    </select>
+
+    <resultMap id="reservationDoneResultMap" type="com.mecol.hotel.entity.Reservation">
+        <id property="reservation_id" column="reservation_id"/>
+        <result property="check_in_time" column="check_in_time"/>
+        <result property="check_in_name" column="check_in_name"/>
+        <result property="check_in_phone" column="check_in_phone"/>
+        <result property="room_info_id" column="room_info_id"/>
+        <association property="roomInfo"
+
+                     javaType="com.mecol.hotel.entity.RoomInfo">
+            <id property="room_info_id" column="room_info_id"/>
+            <result property="room_num" column="room_num"/>
+            <result property="price" column="price"/>
+            <result property="photo_path" column="photo_path"/>
+        </association>
+    </resultMap>
+
+    <select id="getReservationDoneList" resultMap="reservationDoneResultMap">
+          select * from tb_reservation left join  tb_room_info
+          on tb_reservation.room_info_id=tb_room_info.room_info_id
+          where tb_reservation.status=0 and tb_room_info.status=2
+    </select>
+
+    <resultMap id="reservationOldResultMap" type="com.mecol.hotel.entity.Reservation">
+        <id property="reservation_id" column="reservation_id"/>
+        <result property="check_in_time" column="check_in_time"/>
+        <result property="check_in_name" column="check_in_name"/>
+        <result property="check_in_phone" column="check_in_phone"/>
+        <result property="room_info_id" column="room_info_id"/>
+        <association property="roomInfo"
+
+                     javaType="com.mecol.hotel.entity.RoomInfo">
+            <id property="room_info_id" column="room_info_id"/>
+            <result property="room_num" column="room_num"/>
+            <result property="price" column="price"/>
+            <result property="photo_path" column="photo_path"/>
+        </association>
+    </resultMap>
+
+
+    <select id="getReservationOldList" resultMap="reservationOldResultMap">
+
+        select * from tb_reservation left join  tb_room_info
+          on tb_reservation.room_info_id=tb_room_info.room_info_id
+          where tb_reservation.status=1 and tb_reservation.user_id=#{user_id}
+
+    </select>
+
+
+
+    <resultMap id="reservationNowResultMap" type="com.mecol.hotel.entity.Reservation">
+        <id property="reservation_id" column="reservation_id"/>
+        <result property="check_in_time" column="check_in_time"/>
+        <result property="check_in_name" column="check_in_name"/>
+        <result property="check_in_phone" column="check_in_phone"/>
+        <result property="room_info_id" column="room_info_id"/>
+        <association property="roomInfo"
+
+                     javaType="com.mecol.hotel.entity.RoomInfo">
+            <id property="room_info_id" column="room_info_id"/>
+            <result property="room_num" column="room_num"/>
+            <result property="price" column="price"/>
+            <result property="photo_path" column="photo_path"/>
+        </association>
+    </resultMap>
+
+    <select id="getReservationNowList" resultMap="reservationNowResultMap" >
+
+           select * from tb_reservation left join  tb_room_info
+          on tb_reservation.room_info_id=tb_room_info.room_info_id
+          where tb_reservation.status=0 and tb_reservation.user_id=#{user_id}
+    </select>
+
+
+    <delete id="deleteReservation" >
+
+        delete from  tb_reservation where tb_reservation.user_id=#{user_id}
+        and tb_reservation.room_info_id=#{room_info_id}
+    </delete>
+
+
+</mapper>

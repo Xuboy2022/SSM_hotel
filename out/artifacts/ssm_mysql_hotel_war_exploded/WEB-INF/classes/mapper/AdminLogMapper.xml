@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mecol.hotel.dao.AdminDao">
+    <update id="insAdminLog" parameterType="com.mecol.hotel.entity.AdminLog">
+        insert into tb_adminlog (adminUsername,loginIp,loginTime,logoutTime,isSafeExit) values (#{adminUsername}
+        ,#{loginIp},#{loginTime},#{logoutTime},#{isSafeExit})
+
+    </update>
+    <select id="getAdminLogByUsername" resultType="com.mecol.hotel.entity.AdminLog">
+        select * from tb_adminlog where adminUsername=#{username}
+    </select>
+
+    <select id="getAdminLogByLoginTime"
+            resultType="com.mecol.hotel.entity.AdminLog">
+        select * from tb_adminlog where loginTime=#{loginTime}
+    </select>
+
+    <update id="updateAdminLog" parameterType="com.mecol.hotel.entity.AdminLog">
+        update tb_adminlog
+        <set>
+            <if test="adminUsername!=null">
+                adminUsername=#{adminUsername},
+            </if>
+            <if test="loginIp!=null">
+                loginIp=#{loginIp},
+            </if>
+            <if test="loginTime!=null">
+                loginTime=#{loginTime},
+            </if>
+            <if test="logoutTime!=null">
+                logoutTime=#{logoutTime},
+            </if>
+            <if test="isSafeExit!=null">
+                isSafeExit=#{isSafeExit},
+            </if>
+
+        </set>
+        where id=#{id}
+
+    </update>
+
+    <select id="getAdminLogsList" resultType="com.mecol.hotel.entity.AdminLog">
+        select * from tb_adminlog
+    </select>
+</mapper>

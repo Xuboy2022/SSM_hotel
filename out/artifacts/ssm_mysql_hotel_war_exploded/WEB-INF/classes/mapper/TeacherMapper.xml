@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mecol.bookshop_ssm.dao.TeacherDao">
+
+    <select id="getCourseList" resultType="com.mecol.bookshop_ssm.entity.Teacher">
+        select * from teacher order by id
+    </select>
+    <select id="getTeacherById" resultType="com.mecol.bookshop_ssm.entity.Teacher">
+        select * from teacher where id=#{id}
+    </select>
+
+    <delete id="delTeacherById">
+        delete from teacher where id=#{id}
+    </delete>
+    <update id="updTeacher" parameterType="com.mecol.bookshop_ssm.entity.Teacher">
+        update teacher
+        <set>
+            <if test="teacherName!=null">
+                teacherName=#{teacherName},
+            </if>
+            <if test="sex!=null">
+                sex=#{sex},
+            </if>
+            <if test="birthday!=null">
+                birthday=#{birthday},
+            </if>
+            <if test="grade!=null">
+                grade=#{grade},
+            </if>
+            <if test="rank!=null">
+                rank=#{rank},
+            </if>
+            <if test="jobDate!=null">
+                jobDate=#{jobDate},
+            </if>
+            <if test="college!=null">
+                college=#{college},
+            </if>
+        </set>
+        where id=#{id}
+
+    </update>
+    <insert id="insTeacher" parameterType="com.mecol.bookshop_ssm.entity.Teacher">
+        insert into teacher (teacherName,sex,birthday,grade,rank,jobDate,college)
+        values (#{teacherName},#{sex},#{birthday},#{grade},#{rank},#{jobDate},#{college})
+    </insert>
+</mapper>

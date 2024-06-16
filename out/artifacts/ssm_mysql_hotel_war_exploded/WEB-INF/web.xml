@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4"
+         xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+    http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+
+<display-name>Archetype Created Web Application</display-name>
+  <!--配置 Spring 容器-->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:spring_root.xml</param-value>
+  </context-param>
+
+  <!--中文乱码处理过滤-->
+  <!-- 编码过滤器 -->
+  <filter>
+    <filter-name>characterEncodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>characterEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <!--中文乱码处理过滤 -->
+
+  <!-- urlRewrite即地址重写，用户得到的全部都是经过处理后的URL地址。
+  将我们的动态网页地址转化为静态的地址，如html、shtml，还可以隐藏网页的真正路径。
+  此外还可以用来做地址映射。
+
+  注意web.xml版本必须是2.4以上 要跟改下默认的版本2.3
+
+不大会用啊啊啊！！！！！
+  <filter>
+    <filter-name>UrlRewriteFilter</filter-name>
+    <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+    <init-param>
+      <param-name>confReloadCheckInterval</param-name>
+      <param-value>60</param-value>
+    </init-param>
+    <init-param>
+      <param-name>confPath</param-name>
+      <param-value>/WEB-INF/urlrewrite.xml</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>UrlRewriteFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+-->
+
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+
+
+  <!-- Jasperreport Config Begin -->
+  <servlet>
+    <servlet-name>JasperImageServlet</servlet-name>
+    <servlet-class>net.sf.jasperreports.j2ee.servlets.ImageServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>JasperImageServlet</servlet-name>
+    <url-pattern>/servlets/image</url-pattern>
+  </servlet-mapping>
+  <!-- Jasperreport Config End -->
+
+
+
+
+
+  <!--配置 Spring mvc 容器-->
+  <!--将所有请求，都交给Spring MVC 处理-->
+  <servlet>
+    <servlet-name>webs</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:spring_web.xml</param-value>
+    </init-param>
+  </servlet>
+  <!--将 请求 截取 转交给 webs -->
+  <servlet-mapping>
+    <servlet-name>webs</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+
+
+</web-app>

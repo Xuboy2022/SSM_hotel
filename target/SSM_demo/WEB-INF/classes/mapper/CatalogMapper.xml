@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mecol.hotel.dao.CatalogDao">
+    <select id="getCatalogList" resultType="com.mecol.hotel.entity.RoomCatalog">
+        select * from tb_room_catalog order by room_catalog_id
+    </select>
+
+    <select id="getCatalogById" resultType="com.mecol.hotel.entity.RoomCatalog">
+        select * from tb_room_catalog where room_catalog_id=#{room_catalog_id}
+    </select>
+
+    <select id="getCatalogByCatalogName" resultType="com.mecol.hotel.entity.RoomCatalog">
+        select * from tb_room_catalog where catalog=#{catalog}
+    </select>
+    <update id="updateCatalog" parameterType="com.mecol.hotel.entity.RoomCatalog">
+        update tb_room_catalog
+        <set>
+            <if test="catalog!=null">
+                catalog=#{catalog}
+            </if>
+        </set>
+        where  room_catalog_id=#{room_catalog_id}
+    </update>
+    <delete id="delCatalogById" parameterType="int">
+        delete from tb_room_catalog where room_catalog_id=#{room_catalog_id}
+    </delete>
+    <insert id="addCatalog" parameterType="com.mecol.hotel.entity.RoomCatalog">
+        insert into tb_room_catalog(catalog)
+        values (#{catalog})
+    </insert>
+</mapper>
